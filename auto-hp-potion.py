@@ -7,7 +7,7 @@ from threading import Thread
 
 class AutoHPPotion:
     def __init__(self):
-        # ตั้งค่าเริ่มต้น
+        # ตั้งค่าเริ่มต้นdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
         self.running = False
         self.hp_region = None  # พื้นที่หลอด HP
         self.hp_key = 'f1'     # ปุ่มกดใช้ยา HP (เปลี่ยนได้)

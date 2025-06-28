@@ -20,58 +20,58 @@ class AutoHPPotion:
         self.hp_color_upper = np.array([50, 50, 255])  # สีแดงสูงสุด
 
     def select_hp_bar_region(self):
-        """เลือกพื้นที่หลอด HP"""
-        print("กำลังเลือกพื้นที่หลอด HP...")
-        print("1. กด 's' เพื่อเริ่มเลือกพื้นที่")
-        print("2. คลิกที่มุมซ้ายบนของหลอด HP")
-        print("3. คลิกที่มุมขวาล่างของหลอด HP")
+        """Select HP tube area"""
+        print("Selecting tube area HP...")
+        print("1. Click 's' to start selecting area")
+        print("2. Click the top left corner of the HP tube")
+        print("3. Click the bottom right corner of the HP tube")
         
         # รอให้ผู้ใช้กด 's' เพื่อเริ่ม
         keyboard.wait('s')
         
         # จับภาพจุดแรก
-        print("คลิกที่มุมซ้ายบนของหลอด HP...")
+        print("Click the top left corner of the HP tube...")
         point1 = None
         while point1 is None:
             if pyautogui.mouseDown():
                 point1 = pyautogui.position()
                 time.sleep(0.3)  # รอเล็กน้อยเพื่อป้องกันการคลิกซ้ำ
         
-        print(f"จุดที่ 1: {point1}")
+        print(f"Point 1: {point1}")
         
         # จับภาพจุดที่สอง
-        print("คลิกที่มุมขวาล่างของหลอด HP...")
+        print("Click the bottom right corner of the HP tube...")
         point2 = None
         while point2 is None:
             if pyautogui.mouseDown():
                 point2 = pyautogui.position()
         
-        print(f"จุดที่ 2: {point2}")
+        print(f"Point 2: {point2}")
         
         # คำนวณพื้นที่
         x1, y1 = point1
         x2, y2 = point2
         self.hp_region = (min(x1, x2), min(y1, y2), abs(x2 - x1), abs(y2 - y1))
-        print(f"พื้นที่หลอด HP: {self.hp_region}")
+        print(f"HP tube area: {self.hp_region}")
         return self.hp_region
     
     def set_hp_key(self, key):
-        """ตั้งค่าปุ่มใช้ยา HP"""
+        """Set HP potion key"""
         self.hp_key = key
-        print(f"ตั้งค่าปุ่มใช้ยา HP เป็น: {key}")
+        print(f"Set HP potion key to: {key}")
     
     def set_threshold(self, threshold):
-        """ตั้งค่าเกณฑ์การใช้ยา"""
+        """Set HP potion threshold"""
         if 0 < threshold < 1:
             self.threshold = threshold
-            print(f"ตั้งค่าเกณฑ์การใช้ยาเป็น: {threshold*100}%")
+            print(f"Set HP potion threshold to: {threshold*100}%")
         else:
-            print("เกณฑ์ต้องอยู่ระหว่าง 0 ถึง 1")
+            print("Threshold must be between 0 and 1")
     
     def analyze_hp_bar(self):
-        """วิเคราะห์หลอด HP และคืนค่าเปอร์เซ็นต์ของหลอด HP ที่เหลือ"""
+        """Analyze HP tube and return HP percentage"""
         if not self.hp_region:
-            print("ยังไม่ได้เลือกพื้นที่หลอด HP")
+            print("HP tube area not selected")
             return 1.0
         
         # จับภาพหน้าจอตามพื้นที่ที่กำหนด
@@ -92,15 +92,15 @@ class AutoHPPotion:
         return hp_percent
     
     def use_hp_potion(self):
-        """กดปุ่มใช้ยา HP"""
-        print(f"HP ต่ำ! กำลังใช้ยา HP... (กดปุ่ม {self.hp_key})")
+        """Use HP potion"""
+        print(f"HP low! Using HP potion... (Press {self.hp_key})")
         pyautogui.press(self.hp_key)
         # หน่วงเวลาเล็กน้อยเพื่อป้องกันการกดปุ่มซ้ำ
         time.sleep(1)
     
     def monitor_loop(self):
-        """ลูปการตรวจสอบหลอด HP"""
-        print("เริ่มการตรวจสอบหลอด HP...")
+        """Monitor loop"""
+        print("Start monitoring HP tube...")
         last_use_time = 0
         
         while self.running:
@@ -116,9 +116,9 @@ class AutoHPPotion:
             time.sleep(self.check_interval)
     
     def start(self):
-        """เริ่มการตรวจสอบ"""
+        """Start monitoring"""
         if not self.hp_region:
-            print("กรุณาเลือกพื้นที่หลอด HP ก่อน")
+            print("Please select HP tube area first")
             self.select_hp_bar_region()
         
         self.running = True
@@ -126,34 +126,34 @@ class AutoHPPotion:
         self.monitor_thread.daemon = True
         self.monitor_thread.start()
         
-        print("โปรแกรมเริ่มทำงานแล้ว!")
-        print("กด 'q' เพื่อหยุดโปรแกรม")
+        print("Program started!")
+        print("Press 'q' to stop")
         
         # รอจนกว่าผู้ใช้จะกด 'q' เพื่อหยุดโปรแกรม
         keyboard.wait('q')
         self.stop()
     
     def stop(self):
-        """หยุดการตรวจสอบ"""
+        """Stop monitoring"""
         self.running = False
-        print("โปรแกรมหยุดทำงานแล้ว")
+        print("Program stopped")
 
 if __name__ == "__main__":
-    print("โปรแกรมใช้ยา HP อัตโนมัติ")
+    print("Auto HP potion")
     print("-----------------------")
     
     auto_hp = AutoHPPotion()
     
-    # ตั้งค่าปุ่มใช้ยา
-    key = input("ใส่ปุ่มใช้ยา HP (เช่น f1, 1, q): ")
+    # Set HP potion key
+    key = input("Enter HP potion key")
     auto_hp.set_hp_key(key)
     
     # ตั้งค่าเกณฑ์การใช้ยา
     try:
-        threshold = float(input("ใส่เกณฑ์การใช้ยา (0.1-0.9, เช่น 0.6 หมายถึงใช้ยาเมื่อ HP เหลือ 60%): "))
+        threshold = float(input("Enter HP potion threshold (0.1-0.9, e.g. 0.6 means use when HP is 60%): "))
         auto_hp.set_threshold(threshold)
     except ValueError:
-        print("ใส่ค่าไม่ถูกต้อง ใช้ค่าเริ่มต้น 0.6")
+        print("Invalid value, using default 0.6")
     
     # เริ่มโปรแกรม
     auto_hp.start()
